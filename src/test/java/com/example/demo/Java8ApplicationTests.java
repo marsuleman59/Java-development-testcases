@@ -9,8 +9,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -39,7 +42,7 @@ public class Java8ApplicationTests {
 
     // Reversing a given string
     @Test
-    public void reverseString() {
+    public void reverseStringWithStringBuilder() {
         String name = "Bottle is blue";
         String reverString = new StringBuilder(name).reverse().toString();
         System.out.println(reverString);
@@ -81,7 +84,7 @@ public class Java8ApplicationTests {
     // Capitalize each word in a given String
     @Test
     public void subString2() {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(5);
         String data = "Water consist of both hydrogen and oxygen molecules in 2:1 proportion.";
         String[] splitData = data.split(" ");
         StringBuilder builder = new StringBuilder();
@@ -89,6 +92,14 @@ public class Java8ApplicationTests {
             builder.append(Character.toUpperCase(splitData[i].charAt(0))).append(splitData[i].substring(1)).append(" ");
         }
         System.out.println(builder);
+    }
+
+    @Test
+    public void concat(){
+        String str = "a";
+        String aa = str.concat("aa");
+        aa.replace('a','b');
+        System.out.println(str);
     }
 
     //Ignore this test case
@@ -224,6 +235,17 @@ public class Java8ApplicationTests {
         System.out.println(data.length);
         Assert.assertEquals(Integer.valueOf(2), secondSmallest);
         Assert.assertEquals(Integer.valueOf(14), secondLargest);
+
+        String str = "A";
+        switch (str) {
+            case "a":
+                System.out.println("a");
+                break;
+            default:
+                System.out.println("def");
+            case "h":
+                System.out.println("A");}
+
     }
 
     //Missing panagrams from a sentence
@@ -308,7 +330,7 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void asd() {
+    public void stringPermutation() {
         String[] arr = {"A", "B", "C", "D"};
         int n = arr.length;
         int N = (int) Math.pow(2d, Double.valueOf(n));
@@ -437,21 +459,6 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void forLoop() {
-        int i = 15;
-        for (int n = 1; i <= i; i++) {
-            if (n % 3 == 0 && n % 5 == 0) {
-                System.out.println("fizzBuzz");
-            } else if (n % 3 == 0 && !(n % 5 == 0)) {
-                System.out.println("Fizz");
-            } else if (!(n % 3 == 0) && n % 5 == 0) {
-                System.out.println("Buzz");
-            } else
-                System.out.println(n);
-        }
-    }
-
-    @Test
     public void XPath() {
         XPathFactory xPathFactory = XPathFactory.newInstance();
         XPath xPath = xPathFactory.newXPath();
@@ -506,9 +513,9 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void doubleChar(){
+    public void doubleChar() {
         String name = "Cartoon";
-        StringBuilder  stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < name.length(); i++) {
             stringBuilder.append(name.charAt(i)).append(name.charAt(i));
         }
@@ -516,33 +523,639 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void FirstNonRepetitiveChar(){
-        HashMap<Character,Integer> charCount = new HashMap<>();
+    public void reverseStringWithMultipleArrays() {
+        String stringToReverse = "ABCDE";
+        char[] stringArray = stringToReverse.toCharArray();
+        char[] newCharArray = new char[stringArray.length];
+        int count = stringArray.length - 1;
+        System.out.println(stringArray.length);
+        for (int i = 0; i < stringArray.length; i++) {
+            newCharArray[i] = stringArray[count--];
+        }
+
+
+//        String reversedString = stringArray.toString();
+        System.out.println(ArrayUtils.toString(newCharArray));
+    }
+
+    @Test
+    public void reverseStringWithSingleArrays() {
+        String stringToReverse = "RestInHome";
+        char[] stringArray = stringToReverse.toCharArray();
+        int arrayLength = stringArray.length / 2;
+        int count = stringArray.length - 1;
+        for (int i = 0; i < arrayLength; i++) {
+            char ch1 = stringArray[i];
+
+            char ch2 = stringArray[count];
+
+            stringArray[count] = ch1;
+            stringArray[i] = ch2;
+            count--;
+        }
+
+        System.out.println(ArrayUtils.toString(stringArray));
+    }
+
+    @Test
+    public void FirstNonRepetitiveChar() {
+        HashMap<Character, Integer> charCount = new HashMap<>();
         String str = "aaaabbbbcdddeeeeefgggghhhhhhijjjjkkkkkklmmmmmnnn";
         for (int i = 0; i < str.length(); i++) {
-            if (!charCount.containsKey(str.charAt(i))){
+            if (!charCount.containsKey(str.charAt(i))) {
                 charCount.put(str.charAt(i), 1);
-            }
-            else {
-                charCount.put(str.charAt(i),charCount.get(str.charAt(i))+1);
+            } else {
+                charCount.put(str.charAt(i), charCount.get(str.charAt(i)) + 1);
             }
         }
         int count = charCount.values().stream().mapToInt(Integer::intValue).sum();
-        System.out.println(str.length() + ":actual lenght from string, " +count+ ": Length from HashMap.");
+        System.out.println(str.length() + ":actual lenght from string, " + count + ": Length from HashMap.");
         System.out.println(charCount);
         int thirdNonRep = 0;
         for (int i = 0; i < str.length(); i++) {
-                if (!(charCount.get(str.charAt(i)) > 1)) {
-                    thirdNonRep++;
-                }
+            if (!(charCount.get(str.charAt(i)) > 1)) {
+                thirdNonRep++;
+            }
             if (thirdNonRep == 3) {
-                System.out.println("Third non repetative char: "+str.charAt(i));
+                System.out.println("Third non repetative char: " + str.charAt(i));
                 break;
             }
         }
-        
-        
-        
+    }
+
+    // To-do
+    @Test
+    public void brickProblem() {
+        int small = 2;
+        int large = 1;
+        int goal = 8;
+
+        if (large * 5 == goal || small == goal) {
+            System.out.println("True");
+        }
+//        else if ((goal*5)){
+//            System.out.println("Else if");
+//        }
+
+    }
+
+    @Test
+    public void evenlySpaced() {
+        int a = 2, b = 4, c = 6;
+
+        if (a > b) {
+            int temp = b;
+            b = a;
+            a = temp;
+        }
+
+        if (b > c) {
+            int temp = c;
+            c = b;
+            b = temp;
+        }
+
+        if (a > b) {
+            int temp = b;
+            b = a;
+            a = temp;
+        }
+
+        System.out.println("A: " + a + " B:" + b + " C:" + c);
+
+        if (b - a == c - b) {
+            System.out.println("Evenly spaced");
+        } else {
+            System.out.println("Not Evenly spaced");
+        }
+    }
+
+    @Test
+    public void loneSum() {
+        int a = 1, b = 2, c = 3;
+
+        if (a > b) {
+            int temp = b;
+            b = a;
+            a = temp;
+        }
+
+        if (b > c) {
+            int temp = c;
+            c = b;
+            b = temp;
+        }
+
+        if (a > b) {
+            int temp = b;
+            b = a;
+            a = temp;
+        }
+
+
+        int sum = a + b + c;
+        System.out.println(sum);
+    }
+
+    public void setMainComparator() {
+        Comparator<String> stringComparator = (o1, o2) -> o1.compareTo(o2);
+
+    }
+
+    @Test
+    public void sortWithString() {
+        String sortString = "DEFA";
+        String[] stringArray = {"Apple", "AirPods", "Element", "Goat", "Leap", "Integer", "Frog", "Water"};
+        List<String> sortedList = new ArrayList<>();
+
+        for (int i = 0; i < sortString.length(); i++) {
+            for (int j = 0; j < stringArray.length; j++) {
+                if (stringArray[j].startsWith(String.valueOf(sortString.charAt(i))) == true) {
+                    sortedList.add(stringArray[j]);
+                }
+            }
+        }
+
+        System.out.println(sortedList);
+
+    }
+
+    /*Program to check if every pair of ten in a given in string starting at index 0 has exactly 3 "?(Question marks)".
+    String size not multiple of 10 expected.
+    Minimum String size 10.
+    */
+    @Test
+    public void tenPair() {
+//        String s = "jhkj?fenm?kjshdf?sldkfj???lskdf";
+        String s = "123?567???";
+        int pairSeqCount = s.length() % 10;
+
+        System.out.println("Excluding " + (pairSeqCount - 1) + " count from the given string to make pairs of 10");
+
+        int count = 0, pair = 0;
+        boolean check = false;
+        for (int i = 0; i < (s.length() - pairSeqCount); i++) {
+            pair++;
+
+            if (String.valueOf(s.charAt(i)).equals("?")) {
+                count++;
+            }
+
+            if (pair == 10 && (count < 3 && count > 3)) {
+                check = false;
+
+                System.out.println("String is: " + check);
+                return;
+            } else if (pair == 10 && count == 3) {
+                check = true;
+                pair = 0;
+                count = 0;
+            }
+
+        }
+        System.out.println("String is: " + check);
+    }
+
+    // Integer parser
+    @Test
+    public void parseInteger() {
+        Integer num1 = 12349876;
+        int length = num1.toString().length();
+        Integer[] numerParsedList = new Integer[length];
+        int listIndex = length - 1;
+        while (num1 > 10) {
+            int modValue = num1 % 10;
+            num1 = (num1 / 10);
+            numerParsedList[listIndex--] = modValue;
+        }
+        numerParsedList[0] = num1;
+
+    }
+
+
+    @Test
+    public void shrinkArrayWithTarget() throws IOException {
+
+
+        long nanoTime = System.nanoTime();
+        int index = 0;
+        String target = "a";
+        String[] words = {"a", "a", "a", "a", "b", "c", "a"};
+        ArrayList<Integer> integers = new ArrayList<>();
+
+        for (int i = 0; i < words.length; i++) {
+            if (!words[i].equals(target))
+                integers.add(i);
+        }
+
+        String[] array1 = new String[integers.size()];
+
+        Iterator<Integer> integerIterator = integers.iterator();
+
+        while (integerIterator.hasNext()) {
+            array1[index++] = words[integerIterator.next()];
+        }
+
+        System.out.println("Debug pointer");
+        long nanoTime1 = System.nanoTime();
+        long elapsedTime = nanoTime1 - nanoTime;
+
+        double elapsedTimeInSecond = (double) elapsedTime / 1_000_000_000;
+//        System.out.println("Time taken in seconds: "+elapsedTimeInSecond);
+
+        long convert = TimeUnit.SECONDS.convert(elapsedTime, TimeUnit.NANOSECONDS);
+
+        System.out.println(convert + " seconds");
+    }
+
+    // select *
+
+//    Emp - name- id - name - add - salary - dept
+//    Man - ManId, depId
+
+//    select e.name, e.address from Employee e left join Manager m on e.id = m.id;
+//    select e.name, e.address from Employee e  right join Manager m on e.id = m.id;
+
+//    select e.name, e.address from Employee e  full outer join Manager m on e.id = m.id;
+//    select e.name, e.address from Employee e  inner join Manager m on e.id = m.id;
+
+    // select max(salary) from Employee;
+
+    //select max(salary) as highestSalaryWithDepartment from Employee group by deptartment;
+
+    //select max(salary) from Employee join on (select dept from Manager group by Department);
+
+
+    @Test
+    public void stringReference() {
+        String str1 = "abc";
+        String str2 = "abc";
+
+        if (str1 == str2 && str1.equals(str2)) {
+            System.out.println("Are equal");
+        } else {
+            System.out.println("Not equal");
+        }
+    }
+
+    @Test
+    public void hackerTest() {
+        int x = 3 & 5;
+        int y = 3 | 5;
+        System.out.println(x);
+        System.out.println(y);
+
+    }
+
+    @Test
+    public void primeFactorsWithMathPOW() {
+
+        int low = 6;
+        int high = 222220;
+
+        long count = 0;
+        double multiplePair = 0;
+
+        double powi = 0;
+        double powj;
+
+//        int hitCountJ = 0;
+//        int hitCountI = 0;
+
+        int hitBreak = 1;
+
+        while (hitBreak < high) {
+            hitBreak = hitBreak * 3;
+        }
+
+        for (int i = 0; powi < hitBreak; i++) {
+            powi = Math.pow(3, i);
+            multiplePair = 0;
+//            hitCountI++;
+            for (int j = 0; multiplePair < high; j++) {
+
+                powj = Math.pow(5, j);
+                multiplePair = powi * powj;
+//                hitCountJ++;
+                if (multiplePair >= low && multiplePair <= high) {
+                    count++;
+                }
+            }
+        }
+        System.out.println(count);
+//        System.out.println("Hit count I:" + hitCountI + " & hit count J: " + hitCountJ);
+
+    }
+
+//    @Test
+//    public void scanner(){
+//        Scanner scanner = new Scanner(System.in);
+//        int nextInt = scanner.nextInt();
+//        scanner.re
+//        String line = scanner.nextLine();
+//    }
+
+    @Test
+    public void removeDuplicatesFromArray1() {
+        int[] integers = {1, 2, 5, 7, 4, 6, 4, 4, 2, 2, 2, 4, 3, 2, 2, 2, 2};
+        Set<Integer> integerSet = new HashSet<>();
+
+        for (int number : integers) {
+            integerSet.add(number);
+        }
+
+        System.out.println(integerSet);
+
+    }
+
+    @Test
+    public void permutationString() {
+        String str = "abcde";
+
+        Set<String> stringsPermutation = new HashSet<>();
+
+        for (int i = 0; i < (str.length() - 1); i++) {
+            for (int j = 0; j > i; j++) {
+                stringsPermutation.add(str.substring(i, j));
+            }
+        }
+
+        System.out.println(stringsPermutation);
+
+    }
+
+    @Test
+    public void almostEqualLists() {
+        List<String> stringList1 = new ArrayList<>();
+        List<String> stringList2 = new ArrayList<>();
+
+        //Yes
+        stringList1.add("aaabbc");
+        stringList2.add("cccbba");
+
+        //No
+        stringList1.add("cccccccba");
+        stringList2.add("cccbba");
+
+        //Yes
+        stringList1.add("");
+        stringList2.add("");
+
+        //No
+        stringList1.add("a");
+        stringList2.add("d");
+
+
+
+
+        int sizeList1 = stringList1.size();
+        int sizeList2 = stringList2.size();
+        List<String> finalResult = new ArrayList<>(sizeList1);
+
+        if (sizeList1 != sizeList2) {
+            return;
+        }
+
+
+        for(int i=0; i<sizeList1; i++){
+            String str1 = stringList1.get(i);
+            String str2 = stringList2.get(i);
+
+            HashMap<Character, Integer> charCountMap1 = new HashMap<>();
+            HashMap<Character, Integer> charCountMap2 = new HashMap<>();
+
+            //Adding all char's to hash map with initial value 0
+//            IntStream.rangeClosed((int) 'a', (int) 'z')
+//                    .forEach(ch -> charCountMap1.put((char) ch, 0));
+//
+//            charCountMap2.putAll(charCountMap1);
+
+            for(int j=0; j< str1.length(); j++){
+//                int count = charCountMap1.get(str1.charAt(j));
+                if(charCountMap1.containsKey(str1.charAt(j))){
+                    charCountMap1.put(str1.charAt(j),charCountMap1.get(str1.charAt(j))+1);
+                }
+                else {
+                    charCountMap1.put(str1.charAt(j),1);
+                }
+
+            }
+
+            for(int j=0; j< str2.length(); j++){
+                if(charCountMap2.containsKey(str2.charAt(j))){
+                    charCountMap2.put(str2.charAt(j),charCountMap2.get(str2.charAt(j))+1);
+                }
+                else {
+                    charCountMap2.put(str2.charAt(j),1);
+                }
+            }
+
+            if(charCountMap1.keySet().equals(charCountMap2.keySet())){
+
+                Optional<Map.Entry<Character, Integer>> first = charCountMap1.entrySet().stream()
+                        .filter(entry -> (Math.abs(charCountMap2.get(entry.getKey()) - entry.getValue()) > 3))
+                        .findFirst();
+
+                if (first.isPresent()) {
+                    finalResult.add("NO");
+                } else {
+                    finalResult.add("YES");
+                }
+
+            }
+            else {
+                finalResult.add("NO");
+            }
+
+        }
+        System.out.println(finalResult);
+    }
+
+
+
+
+    @Test
+    public void collectionStream() throws CloneNotSupportedException {
+        List<Employee1> stringList = new ArrayList<>();
+
+        stringList.add(new Employee1("Suleman",1,25));
+        stringList.add(new Employee1("Mohammed",2,35));
+        stringList.add(new Employee1("Deepak",3,28));
+        stringList.add(new Employee1("Deepak",3,28));
+
+        List<Employee1> stringListClone = (List<Employee1>) ((ArrayList<Employee1>) stringList).clone();
+
+
+        System.out.println("Before sorting: "+stringList);
+        Collections.sort(stringList, (o1, o2) -> o1.getAge() - o1.getAge());
+
+        List<Employee1> sortCollector = stringList.stream().sorted(Comparator.comparing(Employee1::getAge)).collect(Collectors.toList());
+
+        System.out.println("After sorting: "+sortCollector );
+
+        List<Employee1> collectDistinctString = sortCollector.stream().distinct().collect(Collectors.toList());
+        System.out.println("Distinct elements: "+collectDistinctString);
+
+        List<String> dep = collectDistinctString.stream().map(Employee1::getName).filter(s -> s.indexOf("Dee") != -1 ).collect(Collectors.toList());
+        System.out.println("Object containing Dep: "+dep);
+
+
+        List<Employee1> collect = stringListClone.stream().distinct().collect(Collectors.toList());
+        System.out.println("Clonned list: "+collect+" size of new list: "+collect.size());
+
+        Integer integer = stringListClone.stream()
+                .mapToInt(employee1 -> employee1.getID())
+                .reduce((i1, i2) -> i1 + i2)
+                .orElse(0);
+
+        System.out.println(integer);
+
+    }
+
+    @Test
+    public void mathMethods(){
+
+        Map<String, String> stringMap1 = new HashMap<>();
+        Map<String, String> stringMap2 = new HashMap<>();
+
+        stringMap1.put("Student","Suleman");
+        stringMap1.put("Student","Mohammed");
+        stringMap2.put("Student","Suleman");
+        stringMap2.put("Teacher","Mohammed");
+
+        boolean present = stringMap1.entrySet().stream().filter(val -> stringMap2.entrySet().stream().anyMatch(val1 -> (val1.getKey().equals(val.getKey())))).findFirst().isPresent();
+
+        System.out.println(present);
+        System.out.println(Math.round(1.5d));
+        int x = 3&5;
+        int y = 3|5;
+        System.out.println(x+" - "+y);
+    }
+
+@Test
+    public void computeIfAbsetMapTest(){
+        Map<Integer, String> stringMap = new HashMap<>();
+        stringMap.put(1,"5");
+    String s1 = stringMap.computeIfPresent(1, (integer, s) -> String.valueOf(Math.pow(Integer.parseInt(s), 2)));
+    System.out.println(s1);
+}
+
+    class Student{
+        int id;
+        String name;
+        double cgpa;
+
+        Student(String name, double cgpa, int id){
+            this.id = id;
+            this.name = name;
+            this.cgpa = cgpa;
+        }
+
+        public int getID(){
+            return id;
+        }
+
+        public String getName(){
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", cgpa=" + cgpa +
+                    '}';
+        }
+
+        public double getCGPA(){
+            return cgpa;
+        }
+    }
+
+@Test
+    public void comparator(){
+        List<String> strings = new ArrayList<>();
+        strings.add("12");
+        strings.add("ENTER John 3.75 50");
+        strings.add("ENTER Mark 3.8 24");
+        strings.add("ENTER Shafaet 3.7 35");
+        strings.add("SERVED");
+        strings.add("SERVED");
+        strings.add("ENTER Samiha 3.85 36");
+        strings.add("SERVED");
+        strings.add("ENTER Ashley 3.9 42");
+        strings.add("ENTER Maria 3.6 46");
+        strings.add("ENTER Anik 3.95 49");
+        strings.add("ENTER Dan 3.95 50");
+        strings.add("SERVED");
+    ArrayList<Student> students = getStudents(strings);
+    students.stream().map(Student::getName).forEach(System.out::println);
+}
+
+    public ArrayList<Student> getStudents(List<String> events) {
+        PriorityQueue < Student > pQueue = new PriorityQueue(Comparator.comparing(Student::getCGPA).reversed().thenComparing(Student::getName).thenComparing(Student::getID));
+//        PriorityQueue<Student> pQueue1 = new PriorityQueue<>(Comparator.comparing(Student::getCGPA).reversed().thenComparing(Student::getName).thenComparing(Student::getID)) ;
+
+        for(int i=0; i<events.size(); i++){
+
+            if(events.get(i).contains("ENTER")){
+                String student = events.get(i);
+                String[] studentAttr = student.split(" ");
+                pQueue.add(new Student(studentAttr[1], Double.valueOf(studentAttr[2]), Integer.valueOf(studentAttr[3])));
+            }
+
+            else if(events.get(i).contains("SERVED")){
+                pQueue.poll();
+                System.out.print("");
+            }
+        }
+
+        return new ArrayList(pQueue);
+    }
+
+
+    public static void sortArray(char[] arrayToSort){
+        for(int i=0; i<arrayToSort.length; i++){
+            for(int j=i+1; j< arrayToSort.length; j++){
+                if(arrayToSort[i]> arrayToSort[j] ){
+                    char temp = arrayToSort[i];
+                    arrayToSort[i] = arrayToSort[j];
+                    arrayToSort[j] = temp;
+                }
+            }
+        }
+    }
+
+    public static boolean linearCharArrayCheck(char[] strCharA, char[] strCharB){
+        for(int i=0; i<strCharA.length; i++){
+            if(strCharA[i] != strCharB[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isCharFrequencyEqual(char[] strCharA, char[] strCharB){
+
+        sortArray(strCharA);
+        sortArray(strCharB);
+
+        return linearCharArrayCheck(strCharA, strCharB);
+
+    }
+
+    @Test
+    public void anagram(){
+        String a = "Listen";
+        String b = "silent";
+
+
+        char[] StringA = a.toLowerCase().toCharArray();
+        char[] StringB = b.toLowerCase().toCharArray();
+
+        isCharFrequencyEqual(StringA, StringB);
+
     }
 
 

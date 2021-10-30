@@ -3,8 +3,12 @@ package com.example.demo;
 import java.io.File;
 import java.io.FileFilter;
 import java.sql.SQLOutput;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -31,6 +35,8 @@ public class Java8Application {
 		}
 	};*/
 
+
+
 	FileFilter fileFilter = (File file) -> file.getName().endsWith(".java");
 
 	File[] javaFiles = file.listFiles(fileFilter);
@@ -38,7 +44,15 @@ public class Java8Application {
 	private static Logger logger = LoggerFactory.getLogger(Java8Application.class);
 
 	
-	public static void main(String[] args)  {
+	public static void main(String[] args)  throws InterruptedException{
+		boolean a = true;
+
+		while (a){
+			System.out.println("Thread: "+Thread.currentThread()+ " : is executing at "+ new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss:SSS'Z'").format(Calendar.getInstance().getTime()));
+			Thread.sleep(1000);
+
+		}
+
 		SpringApplication.run(Java8Application.class, args);
 		logger.info(">>>> Java 8 application started successfully >>>>");
 		Java8Application application = new Java8Application();
