@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -1157,6 +1157,146 @@ public class Java8ApplicationTests {
         isCharFrequencyEqual(StringA, StringB);
 
     }
+
+
+
+    @Test
+    public void programTest(){
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.submit(() -> System.out.println("Sounds good"));
+
+        Runnable runnable = () -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        executorService.submit(runnable);
+        executorService.execute(runnable);
+
+        ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
+
+        CompletableFuture<String> future = new CompletableFuture<>();
+    }
+
+    @Test
+    public void midArray(){
+        int length = 0;
+        int[] numbers = {1,2,3,4,5,6};
+
+        for(int num: numbers){
+            length++;
+        }
+
+//        System.out.println("Length: "+length);
+
+        if(length % 2 == 0){
+            System.out.println("mid elements : " + numbers[length/2] +", " +  numbers[(length-1)/2]);
+
+        }
+        else
+            System.out.println("mid element : " + numbers[(length+1)/2]);
+    }
+
+
+    @Test
+    public void subStringNonDuplicateCount(){
+        String str = "starwars";
+        Set<String> subStrings = new HashSet<>();
+
+        for (int i=0; i < str.length() ; i++){
+            String tempString = new String(str.substring(0, i));
+
+            char[] chars = tempString.toCharArray();
+            Set<Character> characters = new HashSet<>();
+            for(int j=0; i< chars.length; i++){
+                if(characters.contains(chars[j])){
+                    int subStringNonRep = j-1;
+                    break;
+                }
+                else
+                    characters.add(chars[j]);
+
+            }
+            subStrings.add(tempString);
+        }
+
+        System.out.println("Total non rep. char strings" + subStrings.size());
+    }
+
+
+
+
+    @Test
+    public void test(){
+        int[] numbers = {1, -2, 4, -5, 1};
+
+        int n = numbers.length;
+
+        for(int i=0; i < n; i++){
+            for(int j=i; j<n; j++){
+                for(int k=i; k<=j; k++){
+                    int[] copyOfRange = Arrays.copyOfRange(numbers, i, k);
+//                    System.out.println(Arrays.toString(copyOfRange));
+                    System.out.print(numbers[k] + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+
+    @Test
+    public void comparatorTest(){
+        List<String>  strings = new ArrayList<>();
+
+        strings.add("Abdul");
+        strings.add("Basith");
+        strings.add("Chandan");
+        strings.add("Dawood");
+        strings.add("Elf");
+        strings.add("Zebra");
+
+        strings.sort(Comparator.comparingInt(String::length));
+    }
+
+    @Test
+    public void loops(){
+        int[] numbers = {1,2,3,4,5};
+
+        for (int i = 0; i < numbers.length; i++) {
+            for (int j = i; j <= numbers.length; j++) {
+
+                int[] copyOfRange = Arrays.copyOfRange(numbers, i, j);
+                if(copyOfRange.length != 0) {
+                    System.out.println(Arrays.toString(copyOfRange) + " :: " + Arrays.stream(copyOfRange).sum());
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

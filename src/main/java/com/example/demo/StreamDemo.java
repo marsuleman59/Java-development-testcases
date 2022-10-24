@@ -16,8 +16,8 @@ public class StreamDemo {
     public static void main(String[] args) {
         StreamDemo streamDemo = new StreamDemo();
         streamDemo.streamIterated.forEach(System.out::println);
-            streamDemo.streamIterated.forEach(System.out::println);
         try {
+            streamDemo.streamIterated.forEach(System.out::println);
         }
         catch (IllegalStateException e){
             System.out.println(e.getMessage());

@@ -2,22 +2,21 @@ package com.example.demo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.*;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 class DateTImeZonedClass {
 
     public static void main(String[] args) throws IOException {
-        LocalDate date = LocalDate.ofYearDay(2020, 35);
+        java.time.LocalDate date = java.time.LocalDate.ofYearDay(2020, 35);
 //
 //        System.out.println(date.toString());
 
         CharSequence text;
         DateTimeFormatter formatter;
-        LocalDate date1 = LocalDate.parse("Jan/18/2020", DateTimeFormatter.ofPattern("MMM/d/y"));
+        java.time.LocalDate date1 = java.time.LocalDate.parse("Jan/18/2020", DateTimeFormatter.ofPattern("MMM/d/y"));
 //        System.out.println(date1.toString());
 
         LocalDate date2 = date1.minusDays(1011);
