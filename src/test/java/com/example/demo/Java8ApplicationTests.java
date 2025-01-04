@@ -13,6 +13,7 @@ import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -434,6 +435,29 @@ public class Java8ApplicationTests {
         Assert.assertEquals(3, integerHashSet.size());
     }
 
+    // Remove duplicates from array
+    @Test
+    public void removeDuplicatesFromArray2() {
+        Integer[] numbersArray = {1, 2, 3, 1, 2, 3};
+        Integer[] uniqueArray = new Integer[28];
+
+        int arrayPointer = 0;
+
+        for (int i = 0; i < numbersArray.length; i++) {
+            boolean existInArray = checkIfValueExistInArray(uniqueArray, numbersArray[i]);
+
+            if (!existInArray)
+                uniqueArray[arrayPointer++] = numbersArray[i];
+        }
+
+        System.out.println(Arrays.toString(uniqueArray));
+    }
+
+    private boolean checkIfValueExistInArray(Integer[] numbersArray, Integer numberToCheck) {
+
+        return Arrays.asList(numbersArray).contains(numberToCheck);
+    }
+
 //	@Test
 //    public void uniqueSubStringsRoundTrip(){
 //        long startTime = System.nanoTime();
@@ -459,6 +483,23 @@ public class Java8ApplicationTests {
             previousNumber = nextNumber;
             nextNumber = sum;
         }
+    }
+
+    @Test
+    public void fibonacciSeries2() {
+        int maxNumber = 10;
+        int previousNumber = 0;
+        int nextNumber = 1;
+
+        for (int i=1; i <= maxNumber; i++){
+            System.out.print(previousNumber + " ");
+            int sum = previousNumber + nextNumber;
+            previousNumber = nextNumber;
+            nextNumber = sum;
+
+        }
+
+
     }
 
     @Test
@@ -630,6 +671,33 @@ public class Java8ApplicationTests {
                 pair2 = i + 1;
             }
         }
+        System.out.println("leastDifference::" + leastDifference);
+        System.out.println("Index of pair is " + pair1 + "," + pair2);
+    }
+
+    @Test
+    public void leastDiff2() {
+        int[] ints = {5, 25, 100, 26, 190};
+        int pair1 = 0;
+        int pair2 = 0;
+        int leastDifference = Integer.MAX_VALUE;
+        Arrays.sort(ints);
+
+        for (int i = 0; i < ints.length; i++) {
+
+            if (i + 1<ints.length ){
+                int difference = Math.abs(ints[i] - ints[i + 1]);
+
+                if (difference < leastDifference){
+                    leastDifference = difference;
+                    pair1 = ints[i];
+                    pair2 = ints[i+1];
+                }
+
+
+            }
+        }
+
         System.out.println("leastDifference::" + leastDifference);
         System.out.println("Index of pair is " + pair1 + "," + pair2);
     }
