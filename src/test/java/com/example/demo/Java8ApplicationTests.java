@@ -281,6 +281,28 @@ public class Java8ApplicationTests {
         Assert.assertEquals("a4b3c2d1", encodingBuilder.toString());
     }
 
+    //Encode a given String
+    @Test
+    public void characterCountEnCoding2() {
+        String data = "ggggggggggiiiiiiilllllllcccbbbb"; // Encode the given string in the format - a4b3c2d1
+        StringJoiner stringJoiner = new StringJoiner("-");
+
+        int pointer = 0;
+
+        for (int j = 0; j < data.length(); j++) {
+            if (j < data.length()-1 && data.charAt(j) == data.charAt(j+1)){
+
+            }
+            else{
+                stringJoiner.add(data.charAt(j)+ "" +data.substring(pointer,j+1).length());
+                pointer = j+1;
+            }
+        }
+
+        System.out.println(stringJoiner);
+
+    }
+
     // return all such pair whose sum is a given target number
     @Test(timeout = 180)
     public void targetPairSummation() {
@@ -342,9 +364,36 @@ public class Java8ApplicationTests {
         Assert.assertEquals(standardCharacters.size(), 22);
     }
 
+    //Missing panagrams from a sentence
+    @Test
+    public void MissingPanagramCharCheck2() {
+
+        String data = "abc".toLowerCase();
+        StringJoiner stringJoiner = new StringJoiner("-");
+
+        for (int i = 97; i <= 97 + 25; i++) {
+            boolean matchFound = false;
+            for (int j = 0; j < data.length(); j++) {
+                if ((int) data.charAt(j) == i){
+                    matchFound = true;
+                break;
+                }
+
+            }
+
+            if (!matchFound){
+                stringJoiner.add(Character.toString((char) i));
+            }
+        }
+
+        System.out.println(Character.toChars(97));
+        System.out.println(stringJoiner);
+
+    }
+
     @Test
     public void panagramCheck() {
-        String data1 = "The quick brown fox jumps over the lazy dog";
+        String data1 = "The quick brown fox jumps over the lazy ";
         String data = data1.toLowerCase();
         Set<Character> characters = new HashSet<>();
         for (int i = 0; i < data.length(); i++) {
@@ -353,7 +402,7 @@ public class Java8ApplicationTests {
             }
         }
         String result = characters.size() == 26 ? "true" : "false";
-        System.out.println("Given sentence has all characters: " + result);
+        System.out.println("Given sentence has all characters: " + result + " missing char count " + (characters.size()-26));
     }
 
     @Test
