@@ -3,9 +3,10 @@ package com.example.demo;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
@@ -22,13 +23,66 @@ import java.util.stream.Stream;
 /*
 @Author Suleman
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class Java8ApplicationTests {
+
+    public static void sortArray(char[] arrayToSort) {
+        for (int i = 0; i < arrayToSort.length; i++) {
+            for (int j = i + 1; j < arrayToSort.length; j++) {
+                if (arrayToSort[i] > arrayToSort[j]) {
+                    char temp = arrayToSort[i];
+                    arrayToSort[i] = arrayToSort[j];
+                    arrayToSort[j] = temp;
+                }
+            }
+        }
+    }
+
+    public static boolean linearCharArrayCheck(char[] strCharA, char[] strCharB) {
+        for (int i = 0; i < strCharA.length; i++) {
+            if (strCharA[i] != strCharB[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isCharFrequencyEqual(char[] strCharA, char[] strCharB) {
+
+        sortArray(strCharA);
+        sortArray(strCharB);
+
+        return linearCharArrayCheck(strCharA, strCharB);
+
+    }
+
+    private static Stream<Arguments> inputPrimeNumbers() {
+        return Stream.of(
+                Arguments.of(2, true),
+                Arguments.of(3, true),
+                Arguments.of(5, true),
+                Arguments.of(7, true),
+                Arguments.of(11, true),
+                Arguments.of(13, true),
+                Arguments.of(17, true),
+                Arguments.of(19, true),
+                Arguments.of(23, true),
+                Arguments.of(29, true),
+                Arguments.of(71, true),
+                Arguments.of(73, true),
+                Arguments.of(79, true),
+                Arguments.of(89, true),
+                Arguments.of(81, false),
+                Arguments.of(4, false),
+                Arguments.of(9, false),
+                Arguments.of(12, false),
+                Arguments.of(16, false)
+        );
+    }
 
     // Get the largest and the smallest word from a given string while avoiding any special char
     @Test
-    public void contextLoads() {
+    public void testRegex() {
         String data = "This-adis-Suleman &&&&&&&&& 0843u%-- suleman as;lkfnasdf asdf-as-df-asdf-asdf-";
 //		String[] splitData = data.toLowerCase().split("[^a-zA-Z0-9]");
         String[] splitData = data.toLowerCase().split("\\s*[^a-zA-Z]+\\s*");
@@ -86,7 +140,7 @@ public class Java8ApplicationTests {
     public void subString2() {
         StringBuilder stringBuilder = new StringBuilder(5);
         String data = "Water consist of both hydrogen and oxygen molecules in 2:1 proportion.";
-        String[] splitData = data.split(" ");
+        String[] splitData = data.split("[\\s]");
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < splitData.length; i++) {
             builder.append(Character.toUpperCase(splitData[i].charAt(0))).append(splitData[i].substring(1)).append(" ");
@@ -95,40 +149,41 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void concat(){
+    public void concat() {
         String str = "a";
         String aa = str.concat("aa");
-        aa.replace('a','b');
-        System.out.println(str);
+        String newstr = aa.replace('a', 'b');
+        System.out.println(newstr);
     }
 
-    //Ignore this test case
     // find out the longest same character word in a given string
     @Test
     public void LongesttupleTest() {
-        String data = "aaaaaabbbbccca";
-        char[] dataArray = data.toCharArray();
-        Arrays.sort(dataArray);
-        System.out.println(Arrays.toString(dataArray));
-        HashMap<String, Integer> elementCount = new HashMap<>();
+        String data = "abbbbbbbbbbbbbbbbbbbccccccccccccc";
 
-        for (char ch : dataArray) {
-            if (elementCount.containsKey(Character.toString(ch)))
-                elementCount.put(Character.toString(ch), elementCount.get(Character.toString(ch)) + 1);
-            else elementCount.put(Character.toString(ch), 1);
+        HashMap<String, Integer> tupleLengthMap = new HashMap<>();
+
+        int pointer = 0;
+        for (int i = 0; i < data.length(); i++) {
+
+            if (i + 1 < data.length() && data.charAt(i) == data.charAt(i + 1)) {
+            } else {
+                tupleLengthMap.put(data.substring(pointer, i + 1), data.substring(pointer, i + 1).length());
+                pointer = i + 1;
+
+            }
         }
-        System.out.println(elementCount);
-        String key = elementCount.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
-        String value = String.valueOf(elementCount.get(key));
-        final int indexOf = data.indexOf(key);
-        System.out.println("Key: " + key + " Value :" + value + " is the longest tuple in String :" + data + " at index: " + indexOf);
+
+        String longestKey = tupleLengthMap.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).get().getKey();
+
+        System.out.println(longestKey);
     }
 
     // Getting files from files system and information using Lambda function
     @Test
     public void fileFilter() {
         FileFilter fileFilter = (File endsWith) -> endsWith.getName().endsWith(".java");
-        File files = new File("D:/tmp");
+        File files = new File("/Users/suleman/Desktop");
         File[] fileArray = files.listFiles(fileFilter);
         Comparator<File> fileComparator = Comparator.comparingInt(s -> s.getName().length());
         Arrays.sort(fileArray, fileComparator);
@@ -164,6 +219,24 @@ public class Java8ApplicationTests {
             j = j - 1;
         }
         System.out.println(Arrays.toString(newArray));
+    }
+
+    // Reverse an array algorithm
+    @Test
+    public void reverseAnArray2() {
+        int[] oldArray = {1, 2, 3, 4, 5, 6};
+
+        for (int i = 0; i < oldArray.length/2; i++) {
+
+            int swap1 = oldArray[i];
+            int swap2 = oldArray[oldArray.length  - i -1];
+
+            oldArray[i] = swap2;
+            oldArray[oldArray.length  - i -1] = swap1;
+
+        }
+
+        System.out.println(Arrays.toString(oldArray));
     }
 
     //Find the first repeating Character in a given string
@@ -244,7 +317,8 @@ public class Java8ApplicationTests {
             default:
                 System.out.println("def");
             case "h":
-                System.out.println("A");}
+                System.out.println("A");
+        }
 
     }
 
@@ -311,6 +385,15 @@ public class Java8ApplicationTests {
         Assert.assertEquals(3, integerHashSet.size());
     }
 
+//	@Test
+//    public void uniqueSubStringsRoundTrip(){
+//        long startTime = System.nanoTime();
+//	    CodingC2.combocheck();
+//        long endTime = System.nanoTime();
+//        long totalTime =  (endTime - startTime) / 10000L;
+//        System.out.println("RoundTrip " + totalTime + " ms");
+//    }
+
     @Test
     public void fibonacciSeries() {
         int maxNumber = 10;
@@ -367,15 +450,6 @@ public class Java8ApplicationTests {
 
     }
 
-//	@Test
-//    public void uniqueSubStringsRoundTrip(){
-//        long startTime = System.nanoTime();
-//	    CodingC2.combocheck();
-//        long endTime = System.nanoTime();
-//        long totalTime =  (endTime - startTime) / 10000L;
-//        System.out.println("RoundTrip " + totalTime + " ms");
-//    }
-
     @Test
     public void addOneToTheArray() {
         int[] numbers = {0, 9, 9, 9, 5, 9, 9, 9, 9};
@@ -420,7 +494,7 @@ public class Java8ApplicationTests {
         System.out.println(integerStream);
         System.out.println(atomicInteger);
         System.out.println(IntStream.rangeClosed(0, 5).average().getAsDouble());
-        System.out.println(IntStream.of(1, 0, 1, 1, 1, 1, 1, 1).allMatch(value -> value / value == 1));
+        System.out.println(IntStream.of(1, 1, 1, 1, 1, 1, 1, 1).allMatch(value -> value / value == 1));
     }
 
     @Test
@@ -491,7 +565,6 @@ public class Java8ApplicationTests {
 //        oldGenArrayList.sort(Comparator.comparingInt((String)value -> value.length).thenComparing((String[])o -> o[1].charAt(0)));
         oldGenArrayList.forEach(strings -> System.out.println(Arrays.toString(strings)));
     }
-
 
     @Test
     public void leastDiff() {
@@ -662,6 +735,23 @@ public class Java8ApplicationTests {
 
     }
 
+    // select *
+
+//    Emp - name- id - name - add - salary - dept
+//    Man - ManId, depId
+
+//    select e.name, e.address from Employee e left join Manager m on e.id = m.id;
+//    select e.name, e.address from Employee e  right join Manager m on e.id = m.id;
+
+//    select e.name, e.address from Employee e  full outer join Manager m on e.id = m.id;
+//    select e.name, e.address from Employee e  inner join Manager m on e.id = m.id;
+
+    // select max(salary) from Employee;
+
+    //select max(salary) as highestSalaryWithDepartment from Employee group by deptartment;
+
+    //select max(salary) from Employee join on (select dept from Manager group by Department);
+
     @Test
     public void sortWithString() {
         String sortString = "DEFA";
@@ -732,6 +822,13 @@ public class Java8ApplicationTests {
 
     }
 
+//    @Test
+//    public void scanner(){
+//        Scanner scanner = new Scanner(System.in);
+//        int nextInt = scanner.nextInt();
+//        scanner.re
+//        String line = scanner.nextLine();
+//    }
 
     @Test
     public void shrinkArrayWithTarget() throws IOException {
@@ -767,24 +864,6 @@ public class Java8ApplicationTests {
 
         System.out.println(convert + " seconds");
     }
-
-    // select *
-
-//    Emp - name- id - name - add - salary - dept
-//    Man - ManId, depId
-
-//    select e.name, e.address from Employee e left join Manager m on e.id = m.id;
-//    select e.name, e.address from Employee e  right join Manager m on e.id = m.id;
-
-//    select e.name, e.address from Employee e  full outer join Manager m on e.id = m.id;
-//    select e.name, e.address from Employee e  inner join Manager m on e.id = m.id;
-
-    // select max(salary) from Employee;
-
-    //select max(salary) as highestSalaryWithDepartment from Employee group by deptartment;
-
-    //select max(salary) from Employee join on (select dept from Manager group by Department);
-
 
     @Test
     public void stringReference() {
@@ -847,14 +926,6 @@ public class Java8ApplicationTests {
 
     }
 
-//    @Test
-//    public void scanner(){
-//        Scanner scanner = new Scanner(System.in);
-//        int nextInt = scanner.nextInt();
-//        scanner.re
-//        String line = scanner.nextLine();
-//    }
-
     @Test
     public void removeDuplicatesFromArray1() {
         int[] integers = {1, 2, 5, 7, 4, 6, 4, 4, 2, 2, 2, 4, 3, 2, 2, 2, 2};
@@ -906,8 +977,6 @@ public class Java8ApplicationTests {
         stringList2.add("d");
 
 
-
-
         int sizeList1 = stringList1.size();
         int sizeList2 = stringList2.size();
         List<String> finalResult = new ArrayList<>(sizeList1);
@@ -917,7 +986,7 @@ public class Java8ApplicationTests {
         }
 
 
-        for(int i=0; i<sizeList1; i++){
+        for (int i = 0; i < sizeList1; i++) {
             String str1 = stringList1.get(i);
             String str2 = stringList2.get(i);
 
@@ -930,27 +999,25 @@ public class Java8ApplicationTests {
 //
 //            charCountMap2.putAll(charCountMap1);
 
-            for(int j=0; j< str1.length(); j++){
+            for (int j = 0; j < str1.length(); j++) {
 //                int count = charCountMap1.get(str1.charAt(j));
-                if(charCountMap1.containsKey(str1.charAt(j))){
-                    charCountMap1.put(str1.charAt(j),charCountMap1.get(str1.charAt(j))+1);
-                }
-                else {
-                    charCountMap1.put(str1.charAt(j),1);
+                if (charCountMap1.containsKey(str1.charAt(j))) {
+                    charCountMap1.put(str1.charAt(j), charCountMap1.get(str1.charAt(j)) + 1);
+                } else {
+                    charCountMap1.put(str1.charAt(j), 1);
                 }
 
             }
 
-            for(int j=0; j< str2.length(); j++){
-                if(charCountMap2.containsKey(str2.charAt(j))){
-                    charCountMap2.put(str2.charAt(j),charCountMap2.get(str2.charAt(j))+1);
-                }
-                else {
-                    charCountMap2.put(str2.charAt(j),1);
+            for (int j = 0; j < str2.length(); j++) {
+                if (charCountMap2.containsKey(str2.charAt(j))) {
+                    charCountMap2.put(str2.charAt(j), charCountMap2.get(str2.charAt(j)) + 1);
+                } else {
+                    charCountMap2.put(str2.charAt(j), 1);
                 }
             }
 
-            if(charCountMap1.keySet().equals(charCountMap2.keySet())){
+            if (charCountMap1.keySet().equals(charCountMap2.keySet())) {
 
                 Optional<Map.Entry<Character, Integer>> first = charCountMap1.entrySet().stream()
                         .filter(entry -> (Math.abs(charCountMap2.get(entry.getKey()) - entry.getValue()) > 3))
@@ -962,8 +1029,7 @@ public class Java8ApplicationTests {
                     finalResult.add("YES");
                 }
 
-            }
-            else {
+            } else {
                 finalResult.add("NO");
             }
 
@@ -971,37 +1037,34 @@ public class Java8ApplicationTests {
         System.out.println(finalResult);
     }
 
-
-
-
     @Test
     public void collectionStream() throws CloneNotSupportedException {
         List<Employee1> stringList = new ArrayList<>();
 
-        stringList.add(new Employee1("Suleman",1,25));
-        stringList.add(new Employee1("Mohammed",2,35));
-        stringList.add(new Employee1("Deepak",3,28));
-        stringList.add(new Employee1("Deepak",3,28));
+        stringList.add(new Employee1("Suleman", 1, 25));
+        stringList.add(new Employee1("Mohammed", 2, 35));
+        stringList.add(new Employee1("Deepak", 3, 28));
+        stringList.add(new Employee1("Deepak", 3, 28));
 
         List<Employee1> stringListClone = (List<Employee1>) ((ArrayList<Employee1>) stringList).clone();
 
 
-        System.out.println("Before sorting: "+stringList);
+        System.out.println("Before sorting: " + stringList);
         Collections.sort(stringList, (o1, o2) -> o1.getAge() - o1.getAge());
 
         List<Employee1> sortCollector = stringList.stream().sorted(Comparator.comparing(Employee1::getAge)).collect(Collectors.toList());
 
-        System.out.println("After sorting: "+sortCollector );
+        System.out.println("After sorting: " + sortCollector);
 
         List<Employee1> collectDistinctString = sortCollector.stream().distinct().collect(Collectors.toList());
-        System.out.println("Distinct elements: "+collectDistinctString);
+        System.out.println("Distinct elements: " + collectDistinctString);
 
-        List<String> dep = collectDistinctString.stream().map(Employee1::getName).filter(s -> s.indexOf("Dee") != -1 ).collect(Collectors.toList());
-        System.out.println("Object containing Dep: "+dep);
+        List<String> dep = collectDistinctString.stream().map(Employee1::getName).filter(s -> s.indexOf("Dee") != -1).collect(Collectors.toList());
+        System.out.println("Object containing Dep: " + dep);
 
 
         List<Employee1> collect = stringListClone.stream().distinct().collect(Collectors.toList());
-        System.out.println("Clonned list: "+collect+" size of new list: "+collect.size());
+        System.out.println("Clonned list: " + collect + " size of new list: " + collect.size());
 
         Integer integer = stringListClone.stream()
                 .mapToInt(employee1 -> employee1.getID())
@@ -1013,68 +1076,35 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void mathMethods(){
+    public void mathMethods() {
 
         Map<String, String> stringMap1 = new HashMap<>();
         Map<String, String> stringMap2 = new HashMap<>();
 
-        stringMap1.put("Student","Suleman");
-        stringMap1.put("Student","Mohammed");
-        stringMap2.put("Student","Suleman");
-        stringMap2.put("Teacher","Mohammed");
+        stringMap1.put("Student", "Suleman");
+        stringMap1.put("Student", "Mohammed");
+        stringMap2.put("Student", "Suleman");
+        stringMap2.put("Teacher", "Mohammed");
 
         boolean present = stringMap1.entrySet().stream().filter(val -> stringMap2.entrySet().stream().anyMatch(val1 -> (val1.getKey().equals(val.getKey())))).findFirst().isPresent();
 
         System.out.println(present);
         System.out.println(Math.round(1.5d));
-        int x = 3&5;
-        int y = 3|5;
-        System.out.println(x+" - "+y);
+        int x = 3 & 5;
+        int y = 3 | 5;
+        System.out.println(x + " - " + y);
     }
 
-@Test
-    public void computeIfAbsetMapTest(){
+    @Test
+    public void computeIfAbsetMapTest() {
         Map<Integer, String> stringMap = new HashMap<>();
-        stringMap.put(1,"5");
-    String s1 = stringMap.computeIfPresent(1, (integer, s) -> String.valueOf(Math.pow(Integer.parseInt(s), 2)));
-    System.out.println(s1);
-}
-
-    class Student{
-        int id;
-        String name;
-        double cgpa;
-
-        Student(String name, double cgpa, int id){
-            this.id = id;
-            this.name = name;
-            this.cgpa = cgpa;
-        }
-
-        public int getID(){
-            return id;
-        }
-
-        public String getName(){
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return "Student{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    ", cgpa=" + cgpa +
-                    '}';
-        }
-
-        public double getCGPA(){
-            return cgpa;
-        }
+        stringMap.put(1, "5");
+        String s1 = stringMap.computeIfPresent(1, (integer, s) -> String.valueOf(Math.pow(Integer.parseInt(s), 2)));
+        System.out.println(s1);
     }
 
-@Test
-    public void comparator(){
+    @Test
+    public void comparator() {
         List<String> strings = new ArrayList<>();
         strings.add("12");
         strings.add("ENTER John 3.75 50");
@@ -1089,23 +1119,21 @@ public class Java8ApplicationTests {
         strings.add("ENTER Anik 3.95 49");
         strings.add("ENTER Dan 3.95 50");
         strings.add("SERVED");
-    ArrayList<Student> students = getStudents(strings);
-    students.stream().map(Student::getName).forEach(System.out::println);
-}
+        ArrayList<Student> students = getStudents(strings);
+        students.stream().map(Student::getName).forEach(System.out::println);
+    }
 
     public ArrayList<Student> getStudents(List<String> events) {
-        PriorityQueue < Student > pQueue = new PriorityQueue(Comparator.comparing(Student::getCGPA).reversed().thenComparing(Student::getName).thenComparing(Student::getID));
+        PriorityQueue<Student> pQueue = new PriorityQueue(Comparator.comparing(Student::getCGPA).reversed().thenComparing(Student::getName).thenComparing(Student::getID));
 //        PriorityQueue<Student> pQueue1 = new PriorityQueue<>(Comparator.comparing(Student::getCGPA).reversed().thenComparing(Student::getName).thenComparing(Student::getID)) ;
 
-        for(int i=0; i<events.size(); i++){
+        for (int i = 0; i < events.size(); i++) {
 
-            if(events.get(i).contains("ENTER")){
+            if (events.get(i).contains("ENTER")) {
                 String student = events.get(i);
                 String[] studentAttr = student.split(" ");
                 pQueue.add(new Student(studentAttr[1], Double.valueOf(studentAttr[2]), Integer.valueOf(studentAttr[3])));
-            }
-
-            else if(events.get(i).contains("SERVED")){
+            } else if (events.get(i).contains("SERVED")) {
                 pQueue.poll();
                 System.out.print("");
             }
@@ -1114,39 +1142,8 @@ public class Java8ApplicationTests {
         return new ArrayList(pQueue);
     }
 
-
-    public static void sortArray(char[] arrayToSort){
-        for(int i=0; i<arrayToSort.length; i++){
-            for(int j=i+1; j< arrayToSort.length; j++){
-                if(arrayToSort[i]> arrayToSort[j] ){
-                    char temp = arrayToSort[i];
-                    arrayToSort[i] = arrayToSort[j];
-                    arrayToSort[j] = temp;
-                }
-            }
-        }
-    }
-
-    public static boolean linearCharArrayCheck(char[] strCharA, char[] strCharB){
-        for(int i=0; i<strCharA.length; i++){
-            if(strCharA[i] != strCharB[i]){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean isCharFrequencyEqual(char[] strCharA, char[] strCharB){
-
-        sortArray(strCharA);
-        sortArray(strCharB);
-
-        return linearCharArrayCheck(strCharA, strCharB);
-
-    }
-
     @Test
-    public void anagram(){
+    public void anagram() {
         String a = "Listen";
         String b = "silent";
 
@@ -1159,9 +1156,8 @@ public class Java8ApplicationTests {
     }
 
 
-
     @Test
-    public void programTest(){
+    public void programTest() {
         ExecutorService executorService = Executors.newCachedThreadPool();
         executorService.submit(() -> System.out.println("Sounds good"));
 
@@ -1182,41 +1178,39 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void midArray(){
+    public void midArray() {
         int length = 0;
-        int[] numbers = {1,2,3,4,5,6};
+        int[] numbers = {1, 2, 3, 4, 5, 6};
 
-        for(int num: numbers){
+        for (int num : numbers) {
             length++;
         }
 
 //        System.out.println("Length: "+length);
 
-        if(length % 2 == 0){
-            System.out.println("mid elements : " + numbers[length/2] +", " +  numbers[(length-1)/2]);
+        if (length % 2 == 0) {
+            System.out.println("mid elements : " + numbers[length / 2] + ", " + numbers[(length - 1) / 2]);
 
-        }
-        else
-            System.out.println("mid element : " + numbers[(length+1)/2]);
+        } else
+            System.out.println("mid element : " + numbers[(length + 1) / 2]);
     }
 
 
     @Test
-    public void subStringNonDuplicateCount(){
+    public void subStringNonDuplicateCount() {
         String str = "starwars";
         Set<String> subStrings = new HashSet<>();
 
-        for (int i=0; i < str.length() ; i++){
+        for (int i = 0; i < str.length(); i++) {
             String tempString = new String(str.substring(0, i));
 
             char[] chars = tempString.toCharArray();
             Set<Character> characters = new HashSet<>();
-            for(int j=0; i< chars.length; i++){
-                if(characters.contains(chars[j])){
-                    int subStringNonRep = j-1;
+            for (int j = 0; i < chars.length; i++) {
+                if (characters.contains(chars[j])) {
+                    int subStringNonRep = j - 1;
                     break;
-                }
-                else
+                } else
                     characters.add(chars[j]);
 
             }
@@ -1227,17 +1221,15 @@ public class Java8ApplicationTests {
     }
 
 
-
-
     @Test
-    public void test(){
+    public void test() {
         int[] numbers = {1, -2, 4, -5, 1};
 
         int n = numbers.length;
 
-        for(int i=0; i < n; i++){
-            for(int j=i; j<n; j++){
-                for(int k=i; k<=j; k++){
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                for (int k = i; k <= j; k++) {
                     int[] copyOfRange = Arrays.copyOfRange(numbers, i, k);
 //                    System.out.println(Arrays.toString(copyOfRange));
                     System.out.print(numbers[k] + " ");
@@ -1249,8 +1241,8 @@ public class Java8ApplicationTests {
 
 
     @Test
-    public void comparatorTest(){
-        List<String>  strings = new ArrayList<>();
+    public void comparatorTest() {
+        List<String> strings = new ArrayList<>();
 
         strings.add("Abdul");
         strings.add("Basith");
@@ -1263,14 +1255,14 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void loops(){
-        int[] numbers = {1,2,3,4,5};
+    public void loops() {
+        int[] numbers = {1, 2, 3, 4, 5};
 
         for (int i = 0; i < numbers.length; i++) {
             for (int j = i; j <= numbers.length; j++) {
 
                 int[] copyOfRange = Arrays.copyOfRange(numbers, i, j);
-                if(copyOfRange.length != 0) {
+                if (copyOfRange.length != 0) {
                     System.out.println(Arrays.toString(copyOfRange) + " :: " + Arrays.stream(copyOfRange).sum());
                 }
             }
@@ -1278,54 +1270,53 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void panagramCheckTest(){
+    public void panagramCheckTest() {
         String data = "The quick brown fox jumps over the lazy dog";
-        String dataWithOnlyChar = data.replaceAll("[^a-zA-Z]","");
+        String dataWithOnlyChar = data.replaceAll("[^a-zA-Z]", "");
         char[] splitData = dataWithOnlyChar.toLowerCase().toCharArray();
         Set<Character> splitDataSet = new HashSet<>();
-        System.out.println(splitDataSet.size()+": Size: "+splitDataSet);
-        for (char ch: splitData){
+        System.out.println(splitDataSet.size() + ": Size: " + splitDataSet);
+        for (char ch : splitData) {
             splitDataSet.add(Character.valueOf(ch));
         }
-        System.out.println(splitDataSet.size()+": Size: "+splitDataSet);
-        System.out.println(String.format("Size of set: [%d] ",splitDataSet.size()));
+        System.out.println(splitDataSet.size() + ": Size: " + splitDataSet);
+        System.out.println(String.format("Size of set: [%d] ", splitDataSet.size()));
     }
 
     @Test
-    public void boxingTest(){
+    public void boxingTest() {
         char a = 'a';
         Character.valueOf(a);
     }
 
     @Test
-    public void panagramCheckTest3(){
+    public void panagramCheckTest3() {
         String data = "The quick brown fox jumps over the !lazy dog";
         String replace = data.replaceAll("[^a-zA-Z]", "").toUpperCase();
         System.out.println(replace);
         char[] charArray = new char[26];
         for (int i = 0; i < replace.length(); i++) {
             int ch = (int) replace.charAt(i);
-            charArray[ch-65] = replace.charAt(i);
+            charArray[ch - 65] = replace.charAt(i);
         }
 
     }
 
     @Test
-    public void string1(){
+    public void string1() {
         String str = "Suleman";
         int n = 2;
 
         String front = "";
-        if(str.length() >= 3){
-            front = str.substring(0,3);
-        }
-        else{
+        if (str.length() >= 3) {
+            front = str.substring(0, 3);
+        } else {
             front = str;
         }
 
         String returnString = "";
 
-        for(int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             returnString += front;
         }
 
@@ -1335,14 +1326,14 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void linkedListTest(){
+    public void linkedListTest() {
         LinkedList<String> linkedStrings = new LinkedList<>();
-        System.out.println("Size of linked list: "+linkedStrings.size());
+        System.out.println("Size of linked list: " + linkedStrings.size());
         linkedStrings.add("Mohammed");
-        System.out.println("Size of linked list: "+linkedStrings.size());
+        System.out.println("Size of linked list: " + linkedStrings.size());
         final boolean suleman = linkedStrings.add("Abdul");
-        System.out.println("Trying to add the String 'Suleman' again. Status added: "+suleman);
-        System.out.println("Size of linked list: "+linkedStrings.size());
+        System.out.println("Trying to add the String 'Suleman' again. Status added: " + suleman);
+        System.out.println("Size of linked list: " + linkedStrings.size());
 
         linkedStrings.add("Rasheed");
         linkedStrings.add("Suleman");
@@ -1350,32 +1341,70 @@ public class Java8ApplicationTests {
         Iterator iterator = linkedStrings.iterator();
 
         int counter = 0;
-        while (iterator.hasNext()){
-            System.out.println("Printing node: " +counter++);
+        while (iterator.hasNext()) {
+            System.out.println("Printing node: " + counter++);
             final String next = (String) iterator.next();
             System.out.println(next);
         }
 
     }
 
+    @ParameterizedTest
+    @MethodSource("inputPrimeNumbers")
+    public void primeNumberCheck(int inputNumber, boolean expectedResult) {
+        boolean isPrimeNumber = true;
 
+        if (inputNumber == 0 || inputNumber == 1) {
+            isPrimeNumber = false;
+        }
 
+        if (inputNumber == 2) {
+            isPrimeNumber = true;
+        } else {
 
+            for (int i = 2; i <= Math.sqrt(inputNumber); i++) {
+                if (inputNumber % i == 0) {
+                    isPrimeNumber = false;
+                    break;
+                }
+            }
+        }
 
+        System.out.println("Prime number check " + inputNumber + " is " + isPrimeNumber);
+        Assertions.assertEquals(expectedResult, isPrimeNumber);
+    }
 
+    class Student {
+        int id;
+        String name;
+        double cgpa;
 
+        Student(String name, double cgpa, int id) {
+            this.id = id;
+            this.name = name;
+            this.cgpa = cgpa;
+        }
 
+        public int getID() {
+            return id;
+        }
 
+        public String getName() {
+            return name;
+        }
 
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", cgpa=" + cgpa +
+                    '}';
+        }
 
-
-
-
-
-
-
-
-
-
+        public double getCGPA() {
+            return cgpa;
+        }
+    }
 
 }
