@@ -13,7 +13,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
