@@ -94,6 +94,13 @@ public class Java8ApplicationTests {
         Assert.assertEquals("u", smallest);
     }
 
+    @Test
+    public void regex2(){
+        String input = "1234abc5678920";
+        input = input.replaceAll("[^0-9]", "");
+        System.out.println(input);
+    }
+
     // Reversing a given string
     @Test
     public void reverseStringWithStringBuilder() {
@@ -184,10 +191,11 @@ public class Java8ApplicationTests {
     public void fileFilter() {
         FileFilter fileFilter = (File endsWith) -> endsWith.getName().endsWith(".java");
         File files = new File("/Users/suleman/Desktop");
-        File[] fileArray = files.listFiles(fileFilter);
+//        File[] fileArray = files.listFiles(fileFilter);
+        File[] fileArray = files.listFiles();
         Comparator<File> fileComparator = Comparator.comparingInt(s -> s.getName().length());
         Arrays.sort(fileArray, fileComparator);
-        Arrays.stream(fileArray).forEach(file -> System.out.println("File name: " + file + "Last modified: " + file.lastModified()));
+        Arrays.stream(fileArray).forEach(file -> System.out.println("File name: " + file));
 
     }
 
@@ -503,9 +511,9 @@ public class Java8ApplicationTests {
 
     @Test
     public void stringPermutation() {
-        String[] arr = {"A", "B", "C", "D"};
+        String[] arr = {"A", "B", "C", "D", "E"};
         int n = arr.length;
-        int N = (int) Math.pow(2d, Double.valueOf(n));
+        int N = (int) Math.pow(2d, n);
         for (int i = 1; i < N; i++) {
             String code = Integer.toBinaryString(N | i).substring(1);
             for (int j = 0; j < n; j++) {
@@ -515,6 +523,15 @@ public class Java8ApplicationTests {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    public void modulus() {
+
+        int mod = 54%10;
+        int divide = 6/6;
+
+        System.out.println(mod + " - "+ divide);
     }
 
     @Test
@@ -1521,6 +1538,90 @@ public class Java8ApplicationTests {
         public double getCGPA() {
             return cgpa;
         }
+    }
+
+    @Test
+    public void IpAddressValidator(){
+        String s = "19.132.268.45";
+        boolean result = false;
+        Boolean match = s.matches("([0-9]{1,3}.){2,3}+[0-9]{1,3}");
+
+        if(match){
+            String[] splitNumbers=s.split("\\.");
+
+            for(String number: splitNumbers){
+                if(Integer.parseInt(number) > 255 || (number.length() > 1 && number.charAt(0) == '0')){
+                    result = false;
+                    break;
+                }
+                result = true;
+            }
+
+        }
+
+        result =  false;
+        System.out.println("is valid");
+    }
+
+    @Test
+    public void pow(){
+        double pow = Math.pow(2, 4);
+        double sqrt = Math.sqrt(4);
+        System.out.println(pow);
+        System.out.println(sqrt);
+
+        String str = "abcdefg";
+        System.out.println(str.substring(1));
+    }
+
+    @Test
+    public void stringChallenge(){
+        int result = 0;
+        String s = "1231231231311133";
+        s = s.trim();
+        int sign = 1;
+        if(s.charAt(0) == '-'){
+            sign = -1;
+            s = s.substring(1);
+            if(s.length() == 1){
+                result = 0;
+            }
+        }
+
+        int numberStart =0;
+        int numberEnd = s.length();
+
+
+        for(int i=0; i<s.length();i++){
+            if(s.charAt(i) != '0'){
+                numberStart   = i;
+                break;
+            }
+        }
+
+        for(int i=numberStart; i<s.length();i++){
+            if(String.valueOf(s.charAt(i)).matches("[^0-9]")){
+                numberEnd = i;
+            }
+        }
+
+        s = s.substring(numberStart, numberEnd);
+
+        if(s.length() ==0){
+            result = 0;
+        }
+        Integer actualNumber = Integer.valueOf(s);
+
+        if(actualNumber > Math.pow(2,32)-1){
+            result = (int) Math.pow(2,32)-1;
+        }
+        else if(actualNumber < Math.pow(2,32) && actualNumber > Math.pow(2,32)*sign){
+            result = (int) actualNumber*sign;
+        }
+
+        result = (int) actualNumber*sign;
+
+        System.out.println(result);
     }
 
 }
