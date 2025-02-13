@@ -97,7 +97,7 @@ public class Java8ApplicationTests {
     @Test
     public void regex2(){
         String input = "1234abc5678920";
-        input = input.replaceAll("[^0-9]", "");
+        input = input.replaceAll("20 | ab", "");
         System.out.println(input);
     }
 
@@ -1624,4 +1624,63 @@ public class Java8ApplicationTests {
         System.out.println(result);
     }
 
+
+    @ParameterizedTest
+    @MethodSource("splitParenthesisStringArray")
+    public void splitParanthesisString(String str, List<String> expectedOutput) {
+
+        ArrayList<String> splitPara = new ArrayList<>();
+
+        int openCount = 0;
+        int closeCount = 0;
+        int pointer = 0;
+        for(int i=0; i<str.length(); i++){
+
+            if(str.charAt(i) == '('){
+                openCount++;
+            }
+            else{
+                closeCount++;
+            }
+            if(openCount == closeCount){
+                splitPara.add(str.substring(pointer,i+1));
+                pointer = i+1;
+            }
+        }
+        assertArrayEquals(expectedOutput, splitPara);
+    }
+
+    private void assertArrayEquals(List<String> expectedOutput, List<String> splitPara) {
+        assertEquals(splitPara.size(), expectedOutput.size());
+        for(int i=0; i<splitPara.size(); i++){
+            assertEquals(expectedOutput.get(i), splitPara.get(i));
+        }
+    }
+
+    private void assertEquals(int size, int size1) {
+        if(size!= size1){
+            throw new AssertionError("Expected: " + size + ", but was: " + size1);
+        }
+    }
+
+    private void assertEquals(String s, String s1) {
+        if(!s.equals(s1)){
+            throw new AssertionError("Expected: " + s + ", but was: " + s1);
+        }
+    }
+
+    public static Stream<Arguments> splitParenthesisStringArray() {
+        return Stream.of(
+                Arguments.of("()()()", Arrays.asList("()", "()", "()")),
+                Arguments.of("", Arrays.asList()),
+                Arguments.of("()()(())", Arrays.asList("()", "()", "(())")),
+                Arguments.of("(())(())", Arrays.asList("(())", "(())")),
+                Arguments.of("((()))", Arrays.asList("((()))")),
+                Arguments.of("()(((((((((())))))))))", Arrays.asList("()","(((((((((())))))))))")),
+                Arguments.of("((())()(()))(()(())())(()())", Arrays.asList("((())()(()))", "(()(())())", "(()())")),
+                Arguments.of("((()))(())()()(()())", Arrays.asList("((()))", "(())", "()", "()", "(()())")),
+                Arguments.of("((())())(()(()()))", Arrays.asList("((())())", "(()(()()))")),
+                Arguments.of("(()(()()))()(((()))()(()))(()((()))(())())", Arrays.asList("(()(()()))", "()", "(((()))()(()))", "(()((()))(())())"))
+        );
+    }
 }
