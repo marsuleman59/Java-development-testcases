@@ -1631,6 +1631,7 @@ public class Java8ApplicationTests {
 
         ArrayList<String> splitPara = new ArrayList<>();
 
+        str = str.replaceAll("[^()]", "");
         int openCount = 0;
         int closeCount = 0;
         int pointer = 0;
