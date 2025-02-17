@@ -1666,7 +1666,7 @@ public class Java8ApplicationTests {
 
     private void assertEquals(String s, String s1) {
         if(!s.equals(s1)){
-            throw new AssertionError("Expected: " + s + ", but was: " + s1);
+            throw new AssertionError("Expected: " + s + " but was: " + s1);
         }
     }
 
@@ -1684,4 +1684,33 @@ public class Java8ApplicationTests {
                 Arguments.of("(()(()()))()(((()))()(()))(()((()))(())())", Arrays.asList("(()(()()))", "()", "(((()))()(()))", "(()((()))(())())"))
         );
     }
+
+
+    @ParameterizedTest
+    @MethodSource("longestNonRepeatingSubstring")
+    public void stringManipulation(String inputString, String expectedResult) {
+
+        HashSet<String> strings = new HashSet<>();
+        for (int i = 0; i < inputString.length(); i++) {
+            HashSet<Character> set = new HashSet<>();
+
+            for (int j = i; j < inputString.length(); j++) {
+                if (!set.contains(inputString.charAt(j))) {
+                    set.add(inputString.charAt(j));
+                } else {
+                    strings.add(inputString.substring(i, j));
+                    break;
+                }
+            }
+        }
+        String longestNonRepeatingString = strings.stream().max(Comparator.comparingInt(String::length)).get();
+        assertEquals(expectedResult, longestNonRepeatingString);
+
+    }
+
+
+    public static Stream<Arguments> longestNonRepeatingSubstring() {
+        return Stream.of(Arguments.of("abcdedabcbb", "abcde"));
+    }
+
 }
