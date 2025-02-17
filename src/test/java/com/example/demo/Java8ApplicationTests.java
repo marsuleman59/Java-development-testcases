@@ -1688,6 +1688,7 @@ public class Java8ApplicationTests {
 
     @ParameterizedTest
     @MethodSource("longestNonRepeatingSubstring")
+    //This is garbage code as the code complexity is high.
     public void stringManipulation(String inputString, String expectedResult) {
 
         HashSet<String> strings = new HashSet<>();
@@ -1697,20 +1698,39 @@ public class Java8ApplicationTests {
             for (int j = i; j < inputString.length(); j++) {
                 if (!set.contains(inputString.charAt(j))) {
                     set.add(inputString.charAt(j));
+                    if(inputString.length() == j+1){
+                        strings.add(inputString.substring(i, j+1));
+                    }
                 } else {
                     strings.add(inputString.substring(i, j));
                     break;
                 }
             }
         }
-        String longestNonRepeatingString = strings.stream().max(Comparator.comparingInt(String::length)).get();
+        boolean stringPresentCheck;
+        String longestNonRepeatingString = "";
+        stringPresentCheck = strings.stream().max(Comparator.comparingInt(String::length)).isPresent();
+        if (stringPresentCheck) {
+            longestNonRepeatingString = strings.stream().max(Comparator.comparingInt(String::length)).get();
+        }
+        else {
+            longestNonRepeatingString = "";
+        }
         assertEquals(expectedResult, longestNonRepeatingString);
 
     }
 
 
     public static Stream<Arguments> longestNonRepeatingSubstring() {
-        return Stream.of(Arguments.of("abcdedabcbb", "abcde"));
+        return Stream.of(Arguments.of("abcdedabcbb", "abcde"),
+                Arguments.of("pwwkew", "wke"),
+                Arguments.of("bbbbb", "b"),
+                Arguments.of(" ", " "),
+                Arguments.of("a", "a"),
+                Arguments.of("aaaaa", "a"),
+                Arguments.of("abcdefg", "abcdefg"),
+                Arguments.of("abacabcbbabac", "abc")
+        );
     }
 
 }
