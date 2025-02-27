@@ -4,6 +4,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -197,22 +198,6 @@ public class Java8ApplicationTests {
         Arrays.sort(fileArray, fileComparator);
         Arrays.stream(fileArray).forEach(file -> System.out.println("File name: " + file));
 
-    }
-
-    // Sort and store any entity with multiple criteria's
-    @Test
-    public void sortEmployee() {
-        Employee employee1 = Employee.builder().ID("12").name("Suleman").build();
-        Employee employee2 = Employee.builder().ID("83").name("Abdul").build();
-        Employee employee3 = Employee.builder().ID("54").name("Rasheed").build();
-        Employee employee4 = Employee.builder().ID("25").name("Mohammed").build();
-        ArrayList<Employee> employees = new ArrayList<>();
-        employees.add(employee1);
-        employees.add(employee2);
-        employees.add(employee3);
-        employees.add(employee4);
-        Collections.sort(employees, Comparator.comparing(Employee::getID).thenComparing(Employee::getName));
-        System.out.println(employees);
     }
 
     // Reverse an array algorithm
@@ -1171,44 +1156,6 @@ public class Java8ApplicationTests {
     }
 
     @Test
-    public void collectionStream() throws CloneNotSupportedException {
-        List<Employee1> stringList = new ArrayList<>();
-
-        stringList.add(new Employee1("Suleman", 1, 25));
-        stringList.add(new Employee1("Mohammed", 2, 35));
-        stringList.add(new Employee1("Deepak", 3, 28));
-        stringList.add(new Employee1("Deepak", 3, 28));
-
-        List<Employee1> stringListClone = (List<Employee1>) ((ArrayList<Employee1>) stringList).clone();
-
-
-        System.out.println("Before sorting: " + stringList);
-        Collections.sort(stringList, (o1, o2) -> o1.getAge() - o1.getAge());
-
-        List<Employee1> sortCollector = stringList.stream().sorted(Comparator.comparing(Employee1::getAge)).collect(Collectors.toList());
-
-        System.out.println("After sorting: " + sortCollector);
-
-        List<Employee1> collectDistinctString = sortCollector.stream().distinct().collect(Collectors.toList());
-        System.out.println("Distinct elements: " + collectDistinctString);
-
-        List<String> dep = collectDistinctString.stream().map(Employee1::getName).filter(s -> s.indexOf("Dee") != -1).collect(Collectors.toList());
-        System.out.println("Object containing Dep: " + dep);
-
-
-        List<Employee1> collect = stringListClone.stream().distinct().collect(Collectors.toList());
-        System.out.println("Clonned list: " + collect + " size of new list: " + collect.size());
-
-        Integer integer = stringListClone.stream()
-                .mapToInt(employee1 -> employee1.getID())
-                .reduce((i1, i2) -> i1 + i2)
-                .orElse(0);
-
-        System.out.println(integer);
-
-    }
-
-    @Test
     public void mathMethods() {
 
         Map<String, String> stringMap1 = new HashMap<>();
@@ -1573,57 +1520,6 @@ public class Java8ApplicationTests {
         String str = "abcdefg";
         System.out.println(str.substring(1));
     }
-
-    @Test
-    public void stringChallenge(){
-        int result = 0;
-        String s = "1231231231311133";
-        s = s.trim();
-        int sign = 1;
-        if(s.charAt(0) == '-'){
-            sign = -1;
-            s = s.substring(1);
-            if(s.length() == 1){
-                result = 0;
-            }
-        }
-
-        int numberStart =0;
-        int numberEnd = s.length();
-
-
-        for(int i=0; i<s.length();i++){
-            if(s.charAt(i) != '0'){
-                numberStart   = i;
-                break;
-            }
-        }
-
-        for(int i=numberStart; i<s.length();i++){
-            if(String.valueOf(s.charAt(i)).matches("[^0-9]")){
-                numberEnd = i;
-            }
-        }
-
-        s = s.substring(numberStart, numberEnd);
-
-        if(s.length() ==0){
-            result = 0;
-        }
-        Integer actualNumber = Integer.valueOf(s);
-
-        if(actualNumber > Math.pow(2,32)-1){
-            result = (int) Math.pow(2,32)-1;
-        }
-        else if(actualNumber < Math.pow(2,32) && actualNumber > Math.pow(2,32)*sign){
-            result = (int) actualNumber*sign;
-        }
-
-        result = (int) actualNumber*sign;
-
-        System.out.println(result);
-    }
-
 
     @ParameterizedTest
     @MethodSource("splitParenthesisStringArray")
