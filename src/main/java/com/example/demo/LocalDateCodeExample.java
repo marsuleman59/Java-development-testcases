@@ -2,10 +2,9 @@ package com.example.demo;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Comparator;
 
-public class LocalDate {
+public class LocalDateCodeExample {
     public static void main(String[] args) {
 
         LocalDateTime localDateTime = LocalDateTime.now();
