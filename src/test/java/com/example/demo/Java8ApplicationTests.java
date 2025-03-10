@@ -13,6 +13,8 @@ import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -1689,7 +1691,10 @@ public class Java8ApplicationTests {
     @ParameterizedTest
     @MethodSource("longestNonRepeatingSubstring")
     //This is garbage code as the code complexity is high.
-    public void stringManipulation(String inputString, String expectedResult) {
+    public void longestNonRepeatingSubstringGarbageCode(String inputString, String expectedResult) {
+
+        int counter = 1;
+        LocalDateTime localDateTime = LocalDateTime.now();
 
         HashSet<String> strings = new HashSet<>();
         for (int i = 0; i < inputString.length(); i++) {
@@ -1705,6 +1710,7 @@ public class Java8ApplicationTests {
                     strings.add(inputString.substring(i, j));
                     break;
                 }
+                System.out.println(++counter);
             }
         }
         boolean stringPresentCheck;
@@ -1718,19 +1724,58 @@ public class Java8ApplicationTests {
         }
         assertEquals(expectedResult, longestNonRepeatingString);
 
+        long timeTaken = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
+        System.out.println("milli seconds: "+timeTaken);
     }
 
-
     public static Stream<Arguments> longestNonRepeatingSubstring() {
-        return Stream.of(Arguments.of("abcdedabcbb", "abcde"),
-                Arguments.of("pwwkew", "wke"),
-                Arguments.of("bbbbb", "b"),
-                Arguments.of(" ", " "),
-                Arguments.of("a", "a"),
-                Arguments.of("aaaaa", "a"),
-                Arguments.of("abcdefg", "abcdefg"),
-                Arguments.of("abacabcbbabac", "abc")
+        return Stream.of(Arguments.of("abcdedabcbbtyur", "abcde")
         );
+    }
+
+//    public static Stream<Arguments> longestNonRepeatingSubstring() {
+//        return Stream.of(Arguments.of("abcdedabcbb", "abcde"),
+//                Arguments.of("pwwkew", "wke"),
+//                Arguments.of("bbbbb", "b"),
+//                Arguments.of(" ", " "),
+//                Arguments.of("a", "a"),
+//                Arguments.of("aaaaa", "a"),
+//                Arguments.of("abcdefg", "abcdefg"),
+//                Arguments.of("abacabcbbabac", "abc")
+//        );
+//    }
+
+
+    @Test
+    public void longestNonRepeatingSubstringEfficientCode() {
+        String s = "abcdedabcbbtyur";
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        int counter = 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        int maxLength = 0;
+        int start = 0;  // Left pointer of the window
+
+        for (int end = 0; end < s.length(); end++) {
+            char currentChar = s.charAt(end);
+
+            // If the character is already in the map and its index is within the current window
+            if (map.containsKey(currentChar) && map.get(currentChar) >= start) {
+                // Move the start pointer to the right of the previous occurrence of the character
+                start = map.get(currentChar) + 1;
+            }
+
+            // Update the map with the current character's index
+            map.put(currentChar, end);
+
+            // Calculate the length of the current substring
+            maxLength = Math.max(maxLength, end - start + 1);
+            System.out.println("Current substring: " + s.substring(start, end + 1) + ", maxLength: " + maxLength);
+            System.out.println(++counter);
+        }
+        long timeTaken = Duration.between(localDateTime, LocalDateTime.now()).toMillis();
+        System.out.println("milli seconds: "+timeTaken);
+
     }
 
 }
