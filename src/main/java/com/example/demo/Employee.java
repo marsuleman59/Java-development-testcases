@@ -20,7 +20,21 @@ public class Employee implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private String ID;
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
 
     @Override
     public boolean equals(Object o) {

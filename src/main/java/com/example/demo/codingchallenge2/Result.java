@@ -1,4 +1,4 @@
-package com.example.demo.codeingchallenge;
+package com.example.demo.codingchallenge2;
 
 import java.util.List;
 

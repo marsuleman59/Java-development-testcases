@@ -1,4 +1,4 @@
-package com.example.demo.codeingchallenge;
+package com.example.demo.codingchallenge2;
 
 public class RecursionUsingFactorial {
     public static void main(String[] args) {
