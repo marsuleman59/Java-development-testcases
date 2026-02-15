@@ -10,6 +10,7 @@ public class StreamDemo {
     Stream<Integer> streamGenerated =
             Stream.generate(() -> atomicInteger.getAndIncrement()).limit(10);
 
+    //just for testing
     Stream<Integer> streamIterated = Stream.iterate(40, n -> n + 2).limit(20);
 
 
