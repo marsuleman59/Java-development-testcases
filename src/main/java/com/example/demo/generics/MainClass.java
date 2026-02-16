@@ -13,7 +13,7 @@ public class MainClass {
 
         MainClass mainClass = new MainClass();
         mainClass.processElements(melons);
-
+//read
         List<WaterMelon> waterMelons = new ArrayList<>();
         waterMelons.add(new WaterMelon(2));
         waterMelons.add(new WaterMelon(3));
